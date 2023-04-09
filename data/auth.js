@@ -1,47 +1,34 @@
 import { v4 as uuidv4 } from "uuid";
-import jwt from "jsonwebtoken";
 
-let accounts = [];
+let users = [
+  {
+    id: "1",
+    username: "bob",
+    password: "aaaa",
+    name: "Bob",
+    email: "bob@gmail.com",
+    url: "",
+  },
+  {
+    id: "2",
+    username: "ellie",
+    password: "aaaa",
+    name: "Ellie",
+    email: "ellie@gmail.com",
+    url: "",
+  },
+];
 
-export async function create({ username, password, name, email, url }) {
-  const account = {
-    id: uuidv4(),
-    username,
-    password,
-    name,
-    email,
-    url,
-  };
-  accounts.push(account);
-  const token = jwt.sign(
-    {},
-    "b7747dbd331c8e312e3a48210bfa2c50a52fb71dbc74e629fd975884326a3ace",
-    {
-      algorithm: "HS256",
-      expiresIn: "1m",
-    }
-  );
-  return { token, username };
+export async function findByUsername(username) {
+  return users.find((user) => user.username === username);
 }
 
-export async function validate({ username, password }) {
-  const filterAccount = accounts.filter(
-    (account) => account.username === username
-  );
-  if (Array.isArray(filterAccount) && filterAccount.length > 0) {
-    if (filterAccount[0].password === password) {
-      const token = jwt.sign(
-        {},
-        "b7747dbd331c8e312e3a48210bfa2c50a52fb71dbc74e629fd975884326a3ace",
-        {
-          algorithm: "HS256",
-          expiresIn: "1m",
-        }
-      );
-      return { token, username };
-    }
-  }
-  return {
-    errorMessage: "로그인 실패",
-  };
+export async function createUser(user) {
+  const created = { ...user, id: uuidv4() };
+  users.push(created);
+  return created.id;
+}
+
+export async function findById(userId) {
+  return users.find((user) => user.id === userId);
 }

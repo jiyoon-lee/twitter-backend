@@ -1,4 +1,5 @@
 // 로직이 변경되어야 한다 controller
+import { getSocketIO } from "../connection/socket.js";
 import * as tweetReopository from "../data/tweet.js";
 import { validationResult } from "express-validator";
 
@@ -27,6 +28,7 @@ export async function createTweet(req, res) {
   }
   const { text, name, username } = req.body;
   const tweet = await tweetReopository.create(text, name, username);
+  getSocketIO().emit("tweets", tweet);
   res.status(201).json(tweet);
 }
 
