@@ -1,46 +1,42 @@
-let tweets = [
-  {
-    id: "1",
-    text: "드림코더분들 화이팅",
-    createdAt: Date.now().toString(),
-    name: "Bob",
-    username: "bob",
-    url: "https://picsum.photos/id/237/200/200",
-  },
-];
+import { db } from "../db/database.js";
 
+const SELECT_JOIN =
+  "SELECT tw.id, tw.text, tw.userId, tw.createdAt, us.username, us.name, us.url FROM tweets as tw JOIN users as us ON tw.userId=us.id";
+const ORDER_DESC = "ORDER BY tw.createdAt DESC";
 export async function getAll() {
-  return tweets;
+  return db
+    .execute(`${SELECT_JOIN} ${ORDER_DESC}`) //
+    .then((result) => result[0]);
 }
 
 export async function getByUsername(username) {
-  return tweets.filter((t) => t.username === username);
+  return db
+    .execute(`${SELECT_JOIN} WHERE username=? ${ORDER_DESC}`, [username])
+    .then((result) => result[0][0]);
 }
 
 export async function getById(id) {
-  return tweets.find((t) => t.id === id);
+  return db
+    .execute(`${SELECT_JOIN} WHERE id=?`, [id])
+    .then((result) => getById(result[0].insertId));
 }
 
-export async function create(text, name, username) {
-  const tweet = {
-    id: Date.now().toString(),
-    text,
-    createdAt: new Date(),
-    name,
-    username,
-  };
-  return (tweets = [tweet, ...tweets]);
+export async function create(text, username) {
+  return db
+    .execute("INSERT INTO tweets (text, createdAt, userid) VALUES (?,?,?)", [
+      text,
+      new Date(),
+      username,
+    ])
+    .then((result) => result[0].insertId);
 }
 
 export async function update(id, text) {
-  const tweet = tweets.find((t) => t.id === id);
-  if (tweet) {
-    tweet.text = text;
-    return tweet;
-  }
-  return null;
+  return db
+    .execute("UPDATE tweets SET text=? WHERE id=?", [text, id])
+    .then(() => getById(id));
 }
 
 export async function remove(id) {
-  tweets = tweets.filter((tweet) => tweet.id !== id);
+  return db.execute("DELETE FROM tweets WHERE id=?", [id]);
 }

@@ -26,8 +26,8 @@ export async function createTweet(req, res) {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { text, name, username } = req.body;
-  const tweet = await tweetReopository.create(text, name, username);
+  const { text, username } = req.body;
+  const tweet = await tweetReopository.create(text, username);
   getSocketIO().emit("tweets", tweet);
   res.status(201).json(tweet);
 }
@@ -35,16 +35,26 @@ export async function createTweet(req, res) {
 export async function updateTweet(req, res) {
   const id = req.params.id;
   const text = req.body.text;
-  const tweet = await tweetReopository.update(id, text);
-  if (tweet) {
-    res.status(200).json(tweet);
-  } else {
-    res.status(404).json({ message: `Tweet by ${id} not found` });
+  if (!tweet) {
+    return res.sendStatus(404);
   }
+  if (tweet.userId !== req.userId) {
+    return res.sendStatus(403);
+  }
+
+  const updated = await tweetReopository.update(id, text);
+  res.status(200).json(updated);
 }
 
 export async function deleteTweet(req, res) {
   const id = req.params.id;
+  const tweet = await tweetReopository.getById(id);
+  if (!tweet) {
+    return res.sendStatus(404);
+  }
+  if (tweet.userId !== req.userId) {
+    return res.sendStatus(403);
+  }
   await tweetReopository.remove(id);
   res.sendStatus(204);
 }

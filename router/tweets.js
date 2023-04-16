@@ -13,8 +13,8 @@ const validateTweet = [
   body("text")
     .trim()
     .notEmpty()
-    .isLength({ min: 10 })
-    .withMessage("10자 이상으로 입력해주세요."),
+    .isLength({ min: 2 })
+    .withMessage("2자 이상으로 입력해주세요."),
   validate,
 ];
 
@@ -26,7 +26,7 @@ router.get("/", tweetController.getTweets);
 router.get("/:id", tweetController.getTweet);
 
 // POST /tweets
-router.post("/", isAuth, validateTweet, tweetController.createTweet);
+router.post("/", validateTweet, tweetController.createTweet);
 
 // PUT /tweets/:id
 router.put("/:id", isAuth, validateTweet, tweetController.updateTweet);
