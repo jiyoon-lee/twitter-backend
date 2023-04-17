@@ -22,9 +22,9 @@ class Socket {
       });
     });
 
-    this.io.on("connnection", (socket) => {
-      console.log("Socket client connected");
-    });
+    // this.io.on("connnection", (socket) => {
+    //   console.log("Socket client connected");
+    // });
   }
 }
 
