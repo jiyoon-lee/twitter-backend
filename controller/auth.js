@@ -26,9 +26,9 @@ export async function signup(req, res) {
     email,
     url,
   });
-  // //토큰을 생성한다.
-  // const token = createJwtToken(userId);
-  // res.status(201).json({ token, username });
+  //토큰을 생성한다.
+  const token = createJwtToken(userId);
+  res.status(201).json({ token, username });
 }
 
 export async function login(req, res) {
@@ -42,7 +42,7 @@ export async function login(req, res) {
     return res.status(401).json({ message: "Invalid user or password" });
   }
   const token = createJwtToken(user.id);
-  res.status(200).json({ token, username });
+  res.status(200).json({ token, username, name: user.name });
 }
 
 function createJwtToken(id) {

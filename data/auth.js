@@ -44,7 +44,7 @@ export async function createUser(user) {
 }
 
 export async function findById(id) {
-  return User.findByPk({ where: { id } });
+  return User.findByPk(id);
 
   // return db
   //   .execute("SELECT * FROM users WHERE id=?", [id])

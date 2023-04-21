@@ -9,7 +9,8 @@
       "request": "launch",
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\controller\\auth.js"
+      "program": "${workspaceFolder}\\router\\tweets.js",
+      "runtimeExecutable": "nodemon"
     }
   ]
 }

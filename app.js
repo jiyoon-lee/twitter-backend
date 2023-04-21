@@ -12,7 +12,12 @@ import { initSocket } from "./connection/socket.js";
 import { config } from "./config.js";
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(helmet());
 app.use(morgan("tiny"));
 
@@ -29,5 +34,4 @@ app.use((error, req, res, next) => {
 
 // db.getConnection().then((connetion) => console.log(connetion));
 sequelize.sync();
-const server = app.listen(config.host.port);
-initSocket(server);
+app.listen(config.host.port);

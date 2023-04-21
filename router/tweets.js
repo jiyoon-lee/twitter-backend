@@ -26,7 +26,7 @@ router.get("/", tweetController.getTweets);
 router.get("/:id", tweetController.getTweet);
 
 // POST /tweets
-router.post("/", validateTweet, tweetController.createTweet);
+router.post("/", isAuth, validateTweet, tweetController.createTweet);
 
 // PUT /tweets/:id
 router.put("/:id", isAuth, validateTweet, tweetController.updateTweet);

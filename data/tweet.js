@@ -25,6 +25,7 @@ export async function getAll() {
   // return db
   //   .execute(`${SELECT_JOIN} ${ORDER_DESC}`) //
   //   .then((result) => result[0]);
+  return Tweet.findAll();
 }
 
 export async function getByUsername(username) {
@@ -39,7 +40,7 @@ export async function getById(id) {
   //   .then((result) => getById(result[0].insertId));
 }
 
-export async function create(text, userId) {
+export async function create(text, username) {
   // return db
   //   .execute("INSERT INTO tweets (text, createdAt, userid) VALUES (?,?,?)", [
   //     text,
@@ -47,9 +48,7 @@ export async function create(text, userId) {
   //     username,
   //   ])
   //   .then((result) => result[0].insertId);
-  return Tweet.create({ text, userId }).then((data) => {
-    console.log("도대체 뭐야아", data);
-  });
+  return Tweet.create({ text, username });
 }
 
 export async function update(id, text) {
