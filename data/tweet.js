@@ -32,15 +32,19 @@ export async function getByUsername(username) {
   // return db
   //   .execute(`${SELECT_JOIN} WHERE username=? ${ORDER_DESC}`, [username])
   //   .then((result) => result[0][0]);
+  return Tweet.findOne({
+    where: { username },
+  });
 }
 
 export async function getById(id) {
   // return db
   //   .execute(`${SELECT_JOIN} WHERE id=?`, [id])
   //   .then((result) => getById(result[0].insertId));
+  return Tweet.findByPk(id);
 }
 
-export async function create(text, username) {
+export async function create(text, userId) {
   // return db
   //   .execute("INSERT INTO tweets (text, createdAt, userid) VALUES (?,?,?)", [
   //     text,
@@ -48,7 +52,7 @@ export async function create(text, username) {
   //     username,
   //   ])
   //   .then((result) => result[0].insertId);
-  return Tweet.create({ text, username });
+  return Tweet.create({ text, userId });
 }
 
 export async function update(id, text) {

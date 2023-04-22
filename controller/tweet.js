@@ -1,6 +1,7 @@
 // 로직이 변경되어야 한다 controller
 import { getSocketIO } from "../connection/socket.js";
 import * as tweetReopository from "../data/tweet.js";
+import * as userRepository from "../data/auth.js";
 import { validationResult } from "express-validator";
 
 export async function getTweets(req, res, next) {
@@ -28,7 +29,8 @@ export async function createTweet(req, res) {
     return res.status(400).json({ errors: errors.array() });
   }
   const { text, username } = req.body;
-  const tweet = await tweetReopository.create(text, username);
+  const user = await userRepository.findByUsername(username);
+  const tweet = await tweetReopository.create(text, user.id);
   res.status(201).json(tweet);
 }
 
@@ -52,6 +54,7 @@ export async function deleteTweet(req, res) {
   if (!tweet) {
     return res.sendStatus(404);
   }
+  console.log("뭘까", tweet, req.userId);
   if (tweet.userId !== req.userId) {
     return res.sendStatus(403);
   }
