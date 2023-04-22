@@ -7,7 +7,6 @@ import "express-async-errors";
 import { sequelize } from "./db/database.js";
 import tweetsRoute from "./router/tweets.js";
 import authRoute from "./router/auth.js";
-import { Server } from "socket.io";
 import { initSocket } from "./connection/socket.js";
 import { config } from "./config.js";
 const app = express();
@@ -34,4 +33,5 @@ app.use((error, req, res, next) => {
 
 // db.getConnection().then((connetion) => console.log(connetion));
 sequelize.sync();
-app.listen(config.host.port);
+const server = app.listen(config.host.port);
+initSocket(server);

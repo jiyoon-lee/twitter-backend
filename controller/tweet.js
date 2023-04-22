@@ -32,11 +32,13 @@ export async function createTweet(req, res) {
   const user = await userRepository.findByUsername(username);
   const tweet = await tweetReopository.create(text, user.id);
   res.status(201).json(tweet);
+  getSocketIO().emit("tweets", tweet);
 }
 
 export async function updateTweet(req, res) {
   const id = req.params.id;
   const text = req.body.text;
+  const tweet = await tweetReopository.getById(id);
   if (!tweet) {
     return res.sendStatus(404);
   }
@@ -54,7 +56,6 @@ export async function deleteTweet(req, res) {
   if (!tweet) {
     return res.sendStatus(404);
   }
-  console.log("뭘까", tweet, req.userId);
   if (tweet.userId !== req.userId) {
     return res.sendStatus(403);
   }

@@ -59,8 +59,21 @@ export async function update(id, text) {
   // return db
   //   .execute("UPDATE tweets SET text=? WHERE id=?", [text, id])
   //   .then(() => getById(id));
+  return Tweet.update(
+    { text },
+    {
+      where: {
+        id,
+      },
+    }
+  );
 }
 
 export async function remove(id) {
   // return db.execute("DELETE FROM tweets WHERE id=?", [id]);
+  return Tweet.destroy({
+    where: {
+      id,
+    },
+  });
 }
