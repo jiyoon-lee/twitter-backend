@@ -1,21 +1,21 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
-const uri =
-  "mongodb+srv://dwitter:.5B29Czh5UvtEsw@cluster0.4zc9e5w.mongodb.net/?retryWrites=true&w=majority";
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+import { MongoClient } from "mongodb";
+import { config } from "../config.js";
+
+let db;
 export async function connectDB() {
+  const client = new MongoClient(config.db.host);
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
-    return client.db("sample_analytics");
+    db = client.db("dwitter");
   } catch (e) {
     console.dir(e);
   }
+}
+
+export function getUsers() {
+  return db.collection("users");
+}
+
+export function getTweets() {
+  return db.collection("tweets");
 }

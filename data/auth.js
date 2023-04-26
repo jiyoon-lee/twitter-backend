@@ -1,52 +1,26 @@
-import { v4 as uuidv4 } from "uuid";
-// import { db } from "../db/database.js";
-import { DataTypes } from "sequelize";
-import { sequelize } from "../db/database.js";
+import { getUsers } from "../database/database.js";
+import MongoDb from "mongodb";
 
-export const User = sequelize.define("user", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  username: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-  password: {
-    type: DataTypes.STRING(128),
-    allowNull: false,
-  },
-  name: {
-    type: DataTypes.STRING(128),
-    allowNull: false,
-  },
-  url: DataTypes.TEXT,
-});
+const ObjectId = MongoDb.ObjectId;
 
 export async function findByUsername(username) {
-  return User.findOne({ where: { username } });
-  // return db
-  //   .execute("SELECT * FROM users WHERE username=?", [username])
-  //   .then((result) => result[0][0]);
+  return getUsers()
+    .findOne({ username }) //
+    .then(mapOptionalUser);
 }
 
 export async function createUser(user) {
-  return User.create(user).then((data) => data.dataValues.id);
-  // const { username, password, name, email, url } = user;
-  // return db
-  //   .execute(
-  //     "INSERT INTO users (username, password, name, email, url) VALUES (?,?,?,?,?)",
-  //     [username, password, name, email, url]
-  //   )
-  //   .then((result) => result[0].insertId);
+  return getUsers()
+    .insertOne(user) //
+    .then((data) => data.insertedId.toString());
 }
 
 export async function findById(id) {
-  return User.findByPk(id);
+  return getUsers()
+    .findOne({ _id: new ObjectId(id) }) //
+    .then(mapOptionalUser);
+}
 
-  // return db
-  //   .execute("SELECT * FROM users WHERE id=?", [id])
-  //   .then((result) => result[0][0]);
+function mapOptionalUser(user) {
+  return user ? { ...user, id: user.id } : user;
 }
