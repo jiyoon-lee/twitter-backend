@@ -22,5 +22,5 @@ export async function findById(id) {
 }
 
 function mapOptionalUser(user) {
-  return user ? { ...user, id: user.id } : user;
+  return user ? { ...user, id: user._id.toString() } : user;
 }
