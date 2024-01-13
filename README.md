@@ -7,8 +7,6 @@
   - controller는 수뇌부와 같은 로직을 처리. 
     - DB와 관련한 처리는 data폴더의 repository에 역임
 
-참고: https://academy.dream-coding.com/courses/node
-
 ## 주요기능
 - 사용자 
   - 로그인(post: /login)
